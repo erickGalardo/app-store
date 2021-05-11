@@ -1,17 +1,33 @@
-require('./app/config/conexion.db');
-const Product = require('./app/models/producto.model');
+const express = require('express'); // modulo para crear servicios
+const https = require('https'); //modulo para crear server
 
-const prod = new Product({
-    name:"Envy 13.3 color black",
-    code:"laptop133envy",
-    description:"Laptop de color negro, modelo delux, procesador intel i5, 8GB ram",
-    suggestedPrice:32000
-})
+const port = 3000; //port http
+const portssl = 3001; // port https
+const app = express(); // definir app
+
+//Modulor routers
+const healthRte = require('./api/routers/health.rte');
+const productRte = require('./api/routers/product.rte')
 
 
-prod.save((err,document) => {
-    if (err){
-        console.log(err)
-    }
-    console.log(document)
-})
+app.use(express.json());
+app.use('/',healthRte);
+app.use('/',productRte);
+
+
+
+var options = {
+    // key: fs.readFileSync(process.env.KEY_PATH),
+    // cert: fs.readFileSync(process.env.CERT_PATH),
+};
+
+var server = https.createServer(options, app).listen(portssl, function () {
+    console.log('https server listening on port ' + portssl)
+    server.once('close', () => {
+        connectionManagers.forEach(connectionManager => connectionManager.close());
+    });
+});
+
+app.listen(port, function () {
+    console.log("http server listening on port: " + port);
+});
