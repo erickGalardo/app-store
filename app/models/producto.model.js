@@ -2,10 +2,17 @@ const { Schema, model } = require('mongoose');
 
 const productSchema = new Schema({
     name: {
-        type:String
+        type:String,
+        required:true
+    },
+    dateInsert:{
+        type: Date,
+        default: Date.now()
     },
     code: {
-        type:String
+        type:String,
+        unique:true,
+        required:true
     },
     description: {
         type:String

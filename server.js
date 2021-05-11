@@ -1,17 +1,20 @@
-require('./app/config/conexion.db');
-const Product = require('./app/models/producto.model');
+const productCtrl = require('./app/controllers/product.ctrl.js');
 
-const prod = new Product({
-    name:"Envy 13.3 color black",
+let prodOne = {
+    name:"Envy 13.3 color silver",
     code:"laptop133envy",
     description:"Laptop de color negro, modelo delux, procesador intel i5, 8GB ram",
     suggestedPrice:32000
-})
+}
 
+let prodTwo = {
+    name:"Envy 13.3 color silver",
+    code:"laptop133envy",
+    description:"Laptop de color negro, modelo delux, procesador intel i5, 8GB ram",
+    suggestedPrice:32000
+}
 
-prod.save((err,document) => {
-    if (err){
-        console.log(err)
-    }
-    console.log(document)
-})
+let pO = productCtrl.insertProduct(prodOne);
+let pT = productCtrl.insertProduct(prodTwo);
+console.log(pO);
+console.log(pT);
