@@ -1,20 +1,20 @@
-const productCtrl = require('./app/controllers/product.ctrl.js');
+const express = require("express");
+const path = require("path");
+const cors = require("cors");
 
-let prodOne = {
-    name:"Envy 13.3 color silver",
-    code:"laptop133envy",
-    description:"Laptop de color negro, modelo delux, procesador intel i5, 8GB ram",
-    suggestedPrice:32000
-}
+var app = express();
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 
-let prodTwo = {
-    name:"Envy 13.3 color silver",
-    code:"laptop133envy",
-    description:"Laptop de color negro, modelo delux, procesador intel i5, 8GB ram",
-    suggestedPrice:32000
-}
 
-let pO = productCtrl.insertProduct(prodOne);
-let pT = productCtrl.insertProduct(prodTwo);
-console.log(pO);
-console.log(pT);
+/*
+    *Description;
+    *Mapping routers
+*/
+const products = require('./app/routers/products.rte');
+
+app.use("/",products);
+
+
+app.listen(3000)

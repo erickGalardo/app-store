@@ -1,23 +1,17 @@
-const productPersistent = require('../factory/product.persisten.js');
-const functions = {
-    insertProduct:insertProduct,
-    updateProduct:updateProduct,
-    findAll:findAll
-}
+const productPersistent = require('../factory/product.persisten');
 
-
-function insertProduct(product){
-    let duplicado = findCode(product.code);
-    console.log("----------------------------");
-    console.log(duplicado);
-    if (!duplicado){
+async function insertProduct(req, rest){
+    let duplicado = await productPersistent.findCode(product.code);
+    console.log(duplicado)
+    if (duplicado) {
         return {
             codigo: 400,
             mensaje: "El registro esta duplicado",
             element: {}
         };
-    } else {
-        element = productPersistent.insertProduct(product)
+    }         
+    element = await productPersistent.insertProduct(product)
+    if (element){
         return {
             codigo: element ? 200:400,
             mensaje: element ? "Success": "Fail",
@@ -26,22 +20,33 @@ function insertProduct(product){
     }
 }
 
-function updateProduct(){
+async function updateProduct(req, res){
     return null;
 }
 
-function findAll(){
-    let objects = productPersistent.findAll();
-    return {
-        elements:objects.size(),
+async function findAll(req, res){
+    const objects = await productPersistent.findAll();
+    console.log(objects);
+    return res.status(objects.length > 0 ? 200 : 400).json({
+        countRow:objects.length,
+        objects:objects,
         pages:0,
-        objects:objects
-    }
+    })
 }
 
-function findCode(code){
-    let element = productPersistent.findByCode(code);
-    return element;
+async function findCode(req, res){
+    const element = await productPersistent.findByCode(req.params.code);
+    console.log(element);
+    return res.status(element ? 200 : 400).json({
+        countRow:0,
+        objects:element,
+        pages:0,
+    })
 }
 
-module.exports = functions;
+module.exports = {
+    insertProduct:insertProduct,
+    updateProduct:updateProduct,
+    findAll:findAll,
+    findCode:findCode
+};

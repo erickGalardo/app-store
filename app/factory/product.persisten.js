@@ -1,21 +1,9 @@
 require('../config/conexion.db');
 const Product = require('../models/producto.model');
 
-const functions = {
-    insertProduct: insertProduct,
-    findAll:findAll,
-    findByCode: findByCode
-}
 async function insertProduct(prod){
-    let product = new Product(prod)
-    await product.save((err, document) => {
-        if (err) {
-            return null
-        }
-        if(document) {
-            return document
-        }
-    });
+    const product = new Product(prod)
+    return await product.save((err, document));
 }
 
 async function findAll(){
@@ -26,4 +14,8 @@ async function findByCode(code){
     return await Product.findOne({code:code});
 }
 
-module.exports = functions;
+module.exports =  {
+    insertProduct: insertProduct,
+    findAll:findAll,
+    findByCode: findByCode
+};
